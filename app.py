@@ -21,10 +21,15 @@ def packet_capture():
     global attack_status
     while True:
         input = start_sniff()
-        predictions = predict(model, input)
+        predictions = list(predict(model, input))
         print(predictions)
-        if 'DDos' or 'Dos' in predictions:
+        if predictions.count("Benign") < len(predictions)/2:
             attack_status["status"] = "Attack detected!!!"
+            attack_status["details"] = f'Benign count : {predictions.count("Benign")}'
+            socketio.emit("attack_update",attack_status)
+        else:
+            attack_status["status"] = "No attack detected"
+            attack_status["details"] = ""
             socketio.emit("attack_update",attack_status)
         
 
@@ -32,4 +37,4 @@ def packet_capture():
 if __name__ == '__main__':
     threading.Thread(target=packet_capture, daemon=True).start()
     webbrowser.open("http://127.0.0.1:5000")
-    socketio.run(app, debug=True)
+    socketio.run(app, debug=True, use_reloader=False)
