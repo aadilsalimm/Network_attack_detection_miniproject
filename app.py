@@ -1,16 +1,18 @@
 from flask import Flask, render_template
 import threading
 from flask_socketio import SocketIO
-import webbrowser
+import webview
+import sys
 from prediction_module.make_prediction import load_model, predict
 from network_capture.capture import start_sniff
 
 
 app = Flask(__name__)
-socketio = SocketIO(app)
+socketio = SocketIO(app, async_mode='threading')
 model = load_model()
 
 attack_status = {"status": "No attack detected", "details": ""}
+server_started = False
 
 @app.route('/')
 def home():
@@ -33,8 +35,18 @@ def packet_capture():
             socketio.emit("attack_update",attack_status)
         
 
-#app.debug = True
+def start_server():
+    global server_started
+    socketio.run(app, debug=False, use_reloader=False)
+    server_started = True
+
+
 if __name__ == '__main__':
+    threading.Thread(target=start_server, daemon=True).start()
     threading.Thread(target=packet_capture, daemon=True).start()
-    webbrowser.open("http://127.0.0.1:5000")
-    socketio.run(app, debug=True, use_reloader=False)
+    
+    webview.create_window("Network monitor","http://127.0.0.1:5000", width=800, height=600)
+    webview.start()
+
+    sys.exit(0)
+    
