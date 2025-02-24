@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/home.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.js"></script>
+</head>
+<body>
+    <!-- Header Section (Off-white) -->
+    <header>
+        <h1>Network Status</h1>
+        <p id="status">No attack detected</p>
+        <!-- <p id="details">Details will be displayed here</p> -->
+    </header>
+
+    <!-- History Section (Grey) -->
+    <div id="history">
+        <h2>History</h2>
+        <p><strong>Total Captured Packets:</strong> <span id="total-packets">0</span></p>
+        <p><strong>Normal Packets:</strong> <span id="normal-packets">0</span></p>
+        <p><strong>DoS Packets:</strong> <span id="dos-packets">0</span></p>
+        <p><strong>DDoS Packets:</strong> <span id="ddos-packets">0</span></p>
+    </div>
+
+
+    <script>
+        var socket = io.connect("http://127.0.0.1:5000");
+        socket.on("attack_update", function(data) {
+            document.getElementById("status").innerText = data.status;
+            document.getElementById("total-packets").innerText = data.total;
+            document.getElementById("normal-packets").innerText = data.benign;
+            document.getElementById("dos-packets").innerText = data.dos;
+            document.getElementById("ddos-packets").innerText = data.ddos;
+            
+        });
+    </script>
+</body>
+</html>
