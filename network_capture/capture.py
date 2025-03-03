@@ -11,7 +11,7 @@ traffic_data = defaultdict(lambda: {key: 0 for key in [
     "flow_duration", "Header_Length", "Duration", "Srate",
     "ack_count", "syn_count", "fin_count", "urg_count", "rst_count",
     "TCP", "UDP", "ICMP", "IPv", "LLC",
-    "Tot sum", "Min", "Max", "AVG", "Std", "Tot size", "Number", "Magnitue", "Radius", 
+    "Tot_sum", "Min", "Max", "AVG", "Std", "Tot size", "Number", "Magnitude", "Radius", 
     "Covariance", "Variance", "Weight"
 ]})
 
@@ -101,10 +101,10 @@ def process_packet(packet):
 
 
         # Packet size statistics
-        traffic_data[src_ip]["Tot sum"] += packet_size
+        traffic_data[src_ip]["Tot_sum"] += packet_size
         traffic_data[src_ip]["Min"] = min(traffic_data[src_ip]["Min"], packet_size) if traffic_data[src_ip]["Min"] else packet_size
         traffic_data[src_ip]["Max"] = max(traffic_data[src_ip]["Max"], packet_size)
-        traffic_data[src_ip]["AVG"] = traffic_data[src_ip]["Tot sum"] / len(packet_size_data[src_ip])
+        traffic_data[src_ip]["AVG"] = traffic_data[src_ip]["Tot_sum"] / len(packet_size_data[src_ip])
         traffic_data[src_ip]["Tot size"] = len(packet_size_data[src_ip])
         traffic_data[src_ip]["Number"] = len(packet_size_data[src_ip])
 
@@ -117,7 +117,7 @@ def process_packet(packet):
             traffic_data[src_ip]["Variance"] = 0
 
         # Compute magnitude
-        traffic_data[src_ip]["Magnitue"] = math.sqrt(sum(size ** 2 for size in packet_size_data[src_ip]))
+        traffic_data[src_ip]["Magnitude"] = math.sqrt(sum(size ** 2 for size in packet_size_data[src_ip]))
 
         # Compute radius
         mean_size = statistics.mean(packet_size_data[src_ip]) if packet_size_data[src_ip] else 0

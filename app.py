@@ -39,14 +39,14 @@ def packet_capture():
         total_captured += len(predictions)
         dos_count += predictions.count('DoS')
         ddos_count += predictions.count('DDoS')
-        benign_count += predictions.count('Benign')
+        benign_count += predictions.count('Normal')
 
         attack_status["total"] = total_captured
         attack_status["benign"] = benign_count
         attack_status["dos"] = dos_count
         attack_status["ddos"] = ddos_count
 
-        if predictions.count("Benign") < len(predictions)/2:
+        if predictions.count("Normal") < len(predictions)/2:
             attack_status["status"] = "Attack detected!!!"
             socketio.emit("attack_update",attack_status)
         else:
