@@ -34,25 +34,32 @@ def packet_capture():
 
     while True:
         input = start_sniff()
-        predictions = list(predict(model, input))
-        print(predictions)
+        predictions = predict(model, input)
+        print(f'debug info:\n{predictions}')
         
-        total_captured += len(predictions)
-        dos_count += predictions.count('DoS')
-        ddos_count += predictions.count('DDoS')
-        benign_count += predictions.count('Normal')
+        total_captured += len(predictions.values())
+        dos_count += list(predictions.values()).count('Dos')
+        ddos_count += list(predictions.values()).count('DDoS')
+        benign_count += list(predictions.values()).count('Normal')
+
+        print(f'total: {total_captured}\ndos: {dos_count}\nbenign: {benign_count}')
 
         attack_status["total"] = total_captured
         attack_status["benign"] = benign_count
         attack_status["dos"] = dos_count
         attack_status["ddos"] = ddos_count
 
-        if predictions.count("Normal") < len(predictions)/2:
-            attack_status["status"] = "Attack detected!!!"
+        if "Dos" in predictions.values():
+            mal_ips = []
+            for ip in predictions:
+                if predictions[ip] == 'Dos':
+                    mal_ips.append(ip)
+
+            attack_status["status"] = f"Attack detected at {mal_ips}"
             socketio.emit("attack_update",attack_status)
         else:
             attack_status["status"] = "No attack detected"
-            socketio.emit("attack_update",attack_status)
+            socketio.emit("attack_update",attack_status)       
         
 
 def start_server():

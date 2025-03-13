@@ -144,4 +144,6 @@ def start_sniff():
     df.reset_index(inplace=True)
     df.rename(columns={'index': 'Source_IP'}, inplace=True)
 
+    traffic_data.clear()
+
     return df
