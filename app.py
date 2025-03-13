@@ -56,6 +56,8 @@ def packet_capture():
 
 def start_server():
     global server_started
+    #Uncomment below line for linux
+    #os.environ["WEBKIT_DISABLE_COMPOSITING_MODE"] = "1"
     socketio.run(app, debug=False, use_reloader=False)
     socketio.emit("attack_update", attack_status)
 
