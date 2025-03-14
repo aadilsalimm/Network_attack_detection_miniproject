@@ -6,6 +6,7 @@ import sys
 import os
 from prediction_module.make_prediction import load_model, predict
 from network_capture.capture import start_sniff
+from mitigation.mitigate import block_ip
 
 
 app = Flask(__name__)
@@ -54,6 +55,8 @@ def packet_capture():
             for ip in predictions:
                 if predictions[ip] == 'Dos':
                     mal_ips.append(ip)
+
+            block_ip(mal_ips)
 
             attack_status["status"] = f"Attack detected at {mal_ips}"
             socketio.emit("attack_update",attack_status)

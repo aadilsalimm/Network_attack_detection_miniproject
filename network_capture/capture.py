@@ -29,6 +29,9 @@ last_packet_time = {}
 def process_packet(packet):
     """Processes each captured packet and extracts features."""
     if packet.haslayer(IP):
+        #avoiding self traffic
+        if packet[IP].src == "10.0.2.4":
+            return
         src_ip = packet[IP].src  
         packet_size = len(packet)  
         current_time = time.time()
