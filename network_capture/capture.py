@@ -5,6 +5,7 @@ import pandas as pd
 import math
 import time
 import statistics
+import datetime
 
 # Store network traffic data with the last four keys correctly placed
 traffic_data = defaultdict(lambda: {key: 0 for key in [
@@ -35,6 +36,9 @@ def process_packet(packet):
         src_ip = packet[IP].src  
         packet_size = len(packet)  
         current_time = time.time()
+
+        #Adding timestamp
+        traffic_data[src_ip]['timestamp'] = str(datetime.datetime.now())
 
         # Compute Inter-Arrival Time (IAT)
         iat = (current_time - last_packet_time[src_ip]) if src_ip in last_packet_time else 0

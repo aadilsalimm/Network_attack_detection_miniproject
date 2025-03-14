@@ -39,9 +39,8 @@ def packet_capture():
         print(f'debug info:\n{predictions}')
         
         total_captured += len(predictions.values())
-        dos_count += list(predictions.values()).count('Dos')
-        ddos_count += list(predictions.values()).count('DDoS')
-        benign_count += list(predictions.values()).count('Normal')
+        dos_count += sum(1 for value in predictions.values() if value[1] == 'Dos')
+        benign_count += sum(1 for value in predictions.values() if value[1] == 'Normal')
 
         print(f'total: {total_captured}\ndos: {dos_count}\nbenign: {benign_count}')
 
@@ -50,10 +49,10 @@ def packet_capture():
         attack_status["dos"] = dos_count
         attack_status["ddos"] = ddos_count
 
-        if "Dos" in predictions.values():
+        if any(value[1] == 'Dos' for value in predictions.values()):
             mal_ips = []
             for ip in predictions:
-                if predictions[ip] == 'Dos':
+                if predictions[ip][1] == 'Dos':
                     mal_ips.append(ip)
 
             block_ip(mal_ips)

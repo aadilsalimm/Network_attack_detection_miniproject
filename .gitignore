@@ -2,3 +2,5 @@ prediction_module/__pycache__/
 prediction_module/models/
 mitigation/__pycache__/
 network_capture/__pycache__/
+database/db/
+database/__pycache__/
