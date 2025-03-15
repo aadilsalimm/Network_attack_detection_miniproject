@@ -7,14 +7,14 @@ import os
 from prediction_module.make_prediction import load_model, predict
 from network_capture.capture import start_sniff
 from mitigation.mitigate import block_ip
-from database.db_ops import db_connect, add_data
+from database.db_ops import db_connect, add_data, close_db_connection
 
 
 app = Flask(__name__)
 socketio = SocketIO(app, async_mode='threading')
 model = load_model()
-db_connection = db_connect()
-db_cursor = db_connection.cursor()
+db_connect()
+
 
 attack_status = {"status": "No attack detected",
                  "total": 0, "benign": 0, "dos": 0, "ddos": 0}
@@ -28,13 +28,12 @@ def home():
 total_captured = 0
 benign_count = 0
 dos_count = 0
-ddos_count = 0
+
 def packet_capture():
     global attack_status
     global total_captured
     global benign_count
     global dos_count
-    global ddos_count
 
     while True:
         input = start_sniff()
@@ -50,7 +49,6 @@ def packet_capture():
         attack_status["total"] = total_captured
         attack_status["benign"] = benign_count
         attack_status["dos"] = dos_count
-        attack_status["ddos"] = ddos_count
 
         if any(value[1] == 'Dos' for value in predictions.values()):
             mal_ips = []
@@ -60,9 +58,8 @@ def packet_capture():
                     mal_ips.append(ip)
                     timestamps.append(predictions[ip][0])
 
-            #block_ip(mal_ips)
-            add_data(db=db_cursor, mal_ips=mal_ips, timestamps=timestamps)
-            db_connection.commit()
+            block_ip(mal_ips)
+            add_data(mal_ips=mal_ips, timestamps=timestamps)
 
             attack_status["status"] = f"Attack detected at {mal_ips}"
             socketio.emit("attack_update",attack_status)
@@ -87,6 +84,5 @@ if __name__ == '__main__':
     webview.create_window("Network monitor","http://127.0.0.1:5000", width=800, height=600)
     webview.start()
 
-    db_connection.close()
+    close_db_connection()
     sys.exit(0)
-    

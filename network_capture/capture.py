@@ -6,6 +6,7 @@ import math
 import time
 import statistics
 import datetime
+from database.db_ops import get_blocked_ips
 
 # Store network traffic data with the last four keys correctly placed
 traffic_data = defaultdict(lambda: {key: 0 for key in [
@@ -29,10 +30,15 @@ last_packet_time = {}
 #TODO: The feature 'Magnitude' is renamed to 'magnitue'
 def process_packet(packet):
     """Processes each captured packet and extracts features."""
+
+    blocked_ips = ["10.0.2.4"]
+
     if packet.haslayer(IP):
-        #avoiding self traffic
-        if packet[IP].src == "10.0.2.4":
+        #avoiding self traffic and already blocked traffic
+        blocked_ips += get_blocked_ips()
+        if packet[IP].src in blocked_ips:
             return
+        
         src_ip = packet[IP].src  
         packet_size = len(packet)  
         current_time = time.time()

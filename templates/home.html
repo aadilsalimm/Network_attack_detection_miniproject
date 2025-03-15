@@ -21,7 +21,6 @@
         <p><strong>Total Captured Flows:</strong> <span id="total-packets">0</span></p>
         <p><strong>Normal Flows:</strong> <span id="normal-packets">0</span></p>
         <p><strong>DoS Flows:</strong> <span id="dos-packets">0</span></p>
-        <p><strong>DDoS Flows:</strong> <span id="ddos-packets">0</span></p>
     </div>
 
 
@@ -32,7 +31,6 @@
             document.getElementById("total-packets").innerText = data.total;
             document.getElementById("normal-packets").innerText = data.benign;
             document.getElementById("dos-packets").innerText = data.dos;
-            document.getElementById("ddos-packets").innerText = data.ddos;
             
         });
     </script>
