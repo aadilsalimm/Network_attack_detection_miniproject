@@ -52,8 +52,13 @@ def packet_capture():
 
     while True:
         input = start_sniff()
-        predictions = predict(model, input)
-        print(f'debug info:\n{predictions}')
+
+        if len(input.columns) < 16:
+            print('No packets captured')
+            predictions = {}
+        else:
+            predictions = predict(model, input)
+            print(f'debug info:\n{predictions}')
         
         total_captured += len(predictions.values())
         dos_count += sum(1 for value in predictions.values() if value[1] == 'Dos')
