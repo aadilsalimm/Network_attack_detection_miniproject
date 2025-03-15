@@ -9,36 +9,45 @@
 </head>
 <body>
     <h1 class="main-heading">Attack Log</h1>
+
+    <a href="/log">
+        <button class="refresh-button">Refresh</button>
+        </a>
+
     <div class="container">
         <!-- <button class="back-button" onclick="goBack()">←</button> -->
          <a href="/">
         <button id="backButton" class="back-button">←</button>
         </a>
-        <table class="log-table">
-            <thead>
-                <tr>
-                    <th>Timestamp</th>
-                    <th>IP</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for record in log %}
-                <tr>
-                    <td>{{ record[0] }}</td>
-                    <td>{{ record[1] }}</td>
-                    <td>
+        {% if log|length == 0 %}
+            <h3>No blocked IPs</h3>
+        {% else %}
+            <table class="log-table">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>IP</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in log %}
+                    <tr>
+                        <td>{{ record[0] }}</td>
+                        <td>{{ record[1] }}</td>
+                        <td>
 
-                        <form action ="/delete-record" method="POST" style="display:inline;">
-                            <input type="hidden" name="ip" value={{record[1]}}>
-                            <button class="unblock-button" onclick="return confirm('Are you sure you want to Unblock this ip?')">Unblock ip</button>
-                        </form>
+                            <form action ="/delete-record" method="POST" style="display:inline;">
+                                <input type="hidden" name="ip" value={{record[1]}}>
+                                <button class="unblock-button" onclick="return confirm('Are you sure you want to Unblock this ip?')">Unblock ip</button>
+                            </form>
 
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
     </div>
 
 </body>
