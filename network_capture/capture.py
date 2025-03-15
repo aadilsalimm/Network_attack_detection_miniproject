@@ -148,7 +148,7 @@ def process_packet(packet):
 
 # Start sniffing
 def start_sniff():
-    print(f"🚀 Capturing network packets for {CAPTURE_TIME} seconds...\n")
+    print(f"Capturing network packets for {CAPTURE_TIME} seconds...\n")
     #iface : Windows -> WiFi, Linux -> enp0s3
     sniff(iface="enp0s3", prn=process_packet, store=False, timeout=CAPTURE_TIME)
 

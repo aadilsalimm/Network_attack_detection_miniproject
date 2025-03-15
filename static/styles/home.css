@@ -54,3 +54,25 @@ p {
     margin: 2% 0;
     font-weight: 400;
 }
+
+/* Right Arrow Button with Background Box */
+.arrow-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 1.5vw;
+    color: #fff;
+    background-color: #444; /* Background color */
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.arrow-button:hover {
+    background-color: #333; /* Darken background on hover */
+}
+
+a {
+    text-decoration: none;
+}

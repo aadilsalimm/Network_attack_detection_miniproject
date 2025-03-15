@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DDoS Attack Log</title>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/log_page.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.js"></script>
+</head>
+<body>
+    <h1 class="main-heading">Attack Log</h1>
+    <div class="container">
+        <!-- <button class="back-button" onclick="goBack()">←</button> -->
+         <a href="/">
+        <button id="backButton" class="back-button">←</button>
+        </a>
+        <table class="log-table">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>IP</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in log %}
+                <tr>
+                    <td>{{ record[0] }}</td>
+                    <td>{{ record[1] }}</td>
+                    <td>
+
+                        <form action ="/delete-record" method="POST" style="display:inline;">
+                            <input type="hidden" name="ip" value={{record[1]}}>
+                            <button class="unblock-button" onclick="return confirm('Are you sure you want to Unblock this ip?')">Unblock ip</button>
+                        </form>
+
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

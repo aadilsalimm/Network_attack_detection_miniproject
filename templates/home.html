@@ -11,18 +11,22 @@
     <!-- Header Section (Off-white) -->
     <header>
         <h1>Network Status</h1>
-        <p id="status">No attack detected</p>
+        <p id="status">{{ attack_status.status }}</p>
         <!-- <p id="details">Details will be displayed here</p> -->
     </header>
 
     <!-- History Section (Grey) -->
     <div id="history">
         <h2>History</h2>
-        <p><strong>Total Captured Flows:</strong> <span id="total-packets">0</span></p>
-        <p><strong>Normal Flows:</strong> <span id="normal-packets">0</span></p>
-        <p><strong>DoS Flows:</strong> <span id="dos-packets">0</span></p>
+        <p><strong>Total Captured Flows:</strong> <span id="total-packets">{{ attack_status.total }}</span></p>
+        <p><strong>Normal Flows:</strong> <span id="normal-packets">{{ attack_status.benign }}</span></p>
+        <p><strong>DoS Flows:</strong> <span id="dos-packets">{{ attack_status.dos }}</span></p>
     </div>
 
+    <!-- Right Arrow Button with Background -->
+     <a href="/log">
+    <button class="arrow-button">Attack log -></button>
+    </a>
 
     <script>
         var socket = io.connect("http://127.0.0.1:5000");

@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect
 import threading
 from flask_socketio import SocketIO
 import webview
@@ -6,8 +6,8 @@ import sys
 import os
 from prediction_module.make_prediction import load_model, predict
 from network_capture.capture import start_sniff
-from mitigation.mitigate import block_ip
-from database.db_ops import db_connect, add_data, close_db_connection
+from mitigation.mitigate import block_ip, unblock_ip
+from database.db_ops import db_connect, add_data, close_db_connection, get_log, del_data
 
 
 app = Flask(__name__)
@@ -17,12 +17,27 @@ db_connect()
 
 
 attack_status = {"status": "No attack detected",
-                 "total": 0, "benign": 0, "dos": 0, "ddos": 0}
+                 "total": 0, "benign": 0, "dos": 0,}
 server_started = False
 
 @app.route('/')
 def home():
-    return render_template("home.html")
+    return render_template("home.html",attack_status=attack_status)
+
+
+@app.route('/log')
+def log_page():
+    log = get_log()
+    return render_template("log_page.html", log=log)
+
+
+@app.route('/delete-record', methods=['POST'])
+def delete_record():
+    ip = request.form.get('ip')
+    unblock_ip(ip)
+    del_data(ip)
+
+    return  redirect('/log')
 
 
 total_captured = 0
