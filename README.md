@@ -54,7 +54,7 @@ Make sure you have Python and pip installed on your system.
 Navigate to the project directory, then run:
 ```sh
     python app.py
-    ```
+```
 
 ## Acknowledgments
 
